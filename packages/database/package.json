@@ -11,10 +11,10 @@
         "lint": "eslint \"src/**/*.ts\" --fix"
     },
     "dependencies": {
-        "@nestjs/common": "^10.3.0",
-        "@nestjs/typeorm": "^10.0.1",
-        "typeorm": "^0.3.19",
-        "pg": "^8.11.3"
+        "@nestjs/common": "11.1.11",
+        "@nestjs/typeorm": "^11.0.0",
+        "typeorm": "^0.3.20",
+        "pg": "^8.13.1"
     },
     "devDependencies": {
         "@types/node": "^20.10.6",

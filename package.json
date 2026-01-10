@@ -4,7 +4,7 @@
   "private": true,
   "description": "NestJS Microservices Chat Application",
   "engines": {
-    "node": ">=20.0.0",
+    "node": ">=22.0.0",
     "pnpm": ">=10.27.0"
   },
   "packageManager": "pnpm@10.27.0",
@@ -38,16 +38,17 @@
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
     "docker:ps": "docker-compose ps",
+    "docker:bake": "DOCKER_BUILDKIT=1 docker buildx bake",
     "db:migrate": "pnpm --filter chat-service migration:run",
     "db:migrate:revert": "pnpm --filter chat-service migration:revert",
     "db:seed": "ts-node scripts/seed-db.ts",
     "prepare": "husky install"
   },
   "devDependencies": {
-    "@types/node": "^20.10.6",
-    "@typescript-eslint/eslint-plugin": "^6.18.0",
-    "@typescript-eslint/parser": "^6.18.0",
-    "eslint": "^8.56.0",
+    "@types/node": "^22.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.18.0",
+    "@typescript-eslint/parser": "^8.18.0",
+    "eslint": "^9.0.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "husky": "^8.0.3",
@@ -56,7 +57,7 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "turbo": "^2.3.3",
-    "typescript": "^5.3.3"
+    "typescript": "^5.7.3"
   },
   "lint-staged": {
     "*.{ts,tsx}": [

@@ -11,9 +11,9 @@
         "lint": "eslint \"src/**/*.ts\" --fix"
     },
     "dependencies": {
-        "@nestjs/common": "^10.3.0",
-        "winston": "^3.11.0",
-        "nest-winston": "^1.9.4"
+        "@nestjs/common": "11.1.11",
+        "winston": "^3.17.0",
+        "nest-winston": "^1.10.2"
     },
     "devDependencies": {
         "@types/node": "^20.10.6",

@@ -319,7 +319,7 @@ engine-strict=true
     "node": ">=20.0.0",
     "pnpm": ">=8.0.0"
   },
-  "packageManager": "pnpm@8.15.0",
+  "packageManager": "pnpm@10.27.0",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     
@@ -378,8 +378,8 @@ engine-strict=true
     "prettier": "^3.1.1",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "turbo": "^1.11.3",
-    "typescript": "^5.3.3"
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.3"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -495,10 +495,10 @@ engine-strict=true
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@nestjs/common": "^10.3.0",
-    "@nestjs/core": "^10.3.0",
-    "@nestjs/microservices": "^10.3.0",
-    "@nestjs/platform-express": "^10.3.0",
+    "@nestjs/common": "11.1.11",
+    "@nestjs/core": "11.1.11",
+    "@nestjs/microservices": "11.1.11",
+    "@nestjs/platform-express": "11.1.11",
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/throttler": "^5.1.1",
@@ -520,9 +520,9 @@ engine-strict=true
     "@app/config": "workspace:*"
   },
   "devDependencies": {
-    "@nestjs/cli": "^10.3.0",
-    "@nestjs/schematics": "^10.1.0",
-    "@nestjs/testing": "^10.3.0",
+    "@nestjs/cli": "11.0.14",
+    "@nestjs/schematics": "11.0.9",
+    "@nestjs/testing": "11.1.11",
     "@types/bcrypt": "^5.0.2",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.11",
@@ -588,15 +588,15 @@ engine-strict=true
     "test": "jest"
   },
   "dependencies": {
-    "@nestjs/common": "^10.3.0",
-    "@nestjs/microservices": "^10.3.0",
+    "@nestjs/common": "11.1.11",
+    "@nestjs/microservices": "11.1.11",
     "class-validator": "^0.14.0",
     "class-transformer": "^0.5.1",
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@types/node": "^20.10.6",
-    "typescript": "^5.3.3"
+    "typescript": "^5.7.3"
   }
 }
 ```
@@ -633,13 +633,13 @@ engine-strict=true
     "lint": "eslint \"src/**/*.ts\" --fix"
   },
   "dependencies": {
-    "@nestjs/common": "^10.3.0",
+    "@nestjs/common": "11.1.11",
     "winston": "^3.11.0",
     "nest-winston": "^1.9.4"
   },
   "devDependencies": {
     "@types/node": "^20.10.6",
-    "typescript": "^5.3.3"
+    "typescript": "^5.7.3"
   }
 }
 ```
@@ -1114,7 +1114,7 @@ cd chat-microservices
 
 # 2. Activer pnpm (si pas déjà fait)
 corepack enable
-corepack prepare pnpm@8.15.0 --activate
+corepack prepare pnpm@10.27.0 --activate
 
 # 3. Vérifier la version de pnpm
 pnpm --version
@@ -1758,7 +1758,7 @@ export const MESSAGE_PATTERNS = {
 FROM node:22-alpine AS builder
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@8.15.0 --activate
+RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
 
 WORKDIR /app
 
@@ -1790,7 +1790,7 @@ RUN pnpm --filter api-gateway build
 FROM node:22-alpine
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@8.15.0 --activate
+RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
 
 WORKDIR /app
 
@@ -1842,7 +1842,7 @@ Pour optimiser les builds Docker en monorepo, créez un Dockerfile.base :
 FROM node:22-alpine AS base
 
 # Install pnpm
-RUN corepack enable && corepack prepare pnpm@8.15.0 --activate
+RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
 
 WORKDIR /app
 
@@ -1885,7 +1885,7 @@ FROM node:22-alpine
 ARG SERVICE_NAME=api-gateway
 ENV SERVICE_NAME=${SERVICE_NAME}
 
-RUN corepack enable && corepack prepare pnpm@8.15.0 --activate
+RUN corepack enable && corepack prepare pnpm@10.27.0 --activate
 
 WORKDIR /app
 
@@ -2097,11 +2097,27 @@ pnpm install --prod --frozen-lockfile
 # 2. Build optimisé avec Turbo
 NODE_ENV=production pnpm run build
 
-# 3. Build Docker images
-docker-compose -f docker-compose.prod.yml build
+# 3. Build Docker images (Optimisé avec Bake)
+pnpm docker:bake
 
 # 4. Push vers registry
-docker-compose -f docker-compose.prod.yml push
+# Note: Bake peut aussi gérer le push automatiquement avec --push
+docker buildx bake --push
+```
+
+### 🚀 Optimisation des Builds (Docker Bake)
+
+Pour accélérer les builds, nous utilisons **Docker BuildKit** et **Docker Bake**. Cela permet de builder tous les microservices en parallèle de manière extrêmement efficace.
+
+**Avantages :**
+- **Parallélisation maximale** : Tous les services sont buildés simultanément.
+- **Cache intelligent** : Partage de cache optimal entre les services du monorepo.
+- **Définition déclarative** : Configuration centralisée dans `docker-bake.hcl`.
+
+**Utilisation :**
+```bash
+# Build local de tous les services
+pnpm docker:bake
 ```
 
 ### CI/CD Pipeline (GitHub Actions Example)
@@ -2126,7 +2142,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
       
       - name: Enable Corepack
         run: corepack enable
@@ -2134,7 +2150,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: 10
       
       - name: Get pnpm store directory
         id: pnpm-cache

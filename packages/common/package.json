@@ -12,9 +12,9 @@
         "test": "jest"
     },
     "dependencies": {
-        "@nestjs/common": "^10.3.0",
-        "@nestjs/microservices": "^10.3.0",
-        "class-validator": "^0.14.0",
+        "@nestjs/common": "11.1.11",
+        "@nestjs/microservices": "11.1.11",
+        "class-validator": "^0.14.1",
         "class-transformer": "^0.5.1",
         "rxjs": "^7.8.1"
     },
