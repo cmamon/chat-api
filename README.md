@@ -2664,31 +2664,3 @@ import { Logger } from '@app/logger';
 import { MESSAGE_PATTERNS } from '@app/common';
 import { DatabaseModule } from '@app/database';
 ```
-
----
-
-## 🎓 Prochaines Étapes Recommandées
-
-Maintenant que vous avez la documentation complète, voici les étapes suggérées :
-
-1. **Setup Initial**
-   - Cloner et installer le projet
-   - Configurer les variables d'environnement
-   - Lancer les services en dev mode
-
-2. **Développement**
-   - Créer votre premier endpoint dans api-gateway
-   - Implémenter un event handler dans chat-service
-   - Tester le WebSocket gateway
-
-3. **Production**
-   - Configurer le CI/CD
-   - Setup monitoring avec Prometheus/Grafana
-   - Déployer sur votre infrastructure
-
-4. **Optimisation**
-   - Analyser les performances avec Turbo
-   - Optimiser les Docker images
-   - Mettre en place le caching Redis
-
-**Bonne chance avec votre projet de chat ! 🚀**
