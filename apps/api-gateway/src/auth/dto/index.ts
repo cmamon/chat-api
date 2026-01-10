@@ -1,34 +1,42 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString, MinLength, MaxLength, IsOptional } from 'class-validator';
 
 export class LoginDto {
-  @IsEmail()
-  email: string;
+    @IsEmail()
+    @IsNotEmpty()
+    email: string;
 
-  @IsNotEmpty()
-  @IsString()
-  password: string;
+    @IsString()
+    @IsNotEmpty()
+    password: string;
 
-  @IsString()
-  deviceId?: string;
+    @IsString()
+    @IsOptional()
+    deviceId?: string;
 }
 
 export class RegisterDto {
-  @IsEmail()
-  email: string;
+    @IsEmail()
+    @IsNotEmpty()
+    email: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(3)
-  username: string;
+    @IsString()
+    @IsNotEmpty()
+    @MinLength(3)
+    @MaxLength(30)
+    username: string;
 
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(12)
-  password: string;
+    @IsString()
+    @IsNotEmpty()
+    @MinLength(12)
+    password: string;
+
+    @IsString()
+    @IsOptional()
+    deviceId?: string;
 }
 
 export class RefreshTokenDto {
-  @IsNotEmpty()
-  @IsString()
-  refresh_token: string;
+    @IsString()
+    @IsNotEmpty()
+    refresh_token: string;
 }
