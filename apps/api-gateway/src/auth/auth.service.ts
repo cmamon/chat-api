@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import * as argon2 from 'argon2';
@@ -35,7 +35,7 @@ export class AuthService {
         throw new UnauthorizedException('Invalid credentials');
       }
 
-      const { password: _, ...result } = user;
+      const { password: _password, ...result } = user;
       return result;
     } catch (error) {
       if (error instanceof UnauthorizedException) {
