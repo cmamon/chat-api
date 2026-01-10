@@ -11,6 +11,12 @@ out/
 **/.turbo/
 *.tsbuildinfo
 
+# TypeScript compiled files (if generated in src)
+**/src/**/*.js
+**/src/**/*.js.map
+**/src/**/*.d.ts
+**/src/**/*.d.ts.map
+
 # Logs
 *.log
 npm-debug.log*
