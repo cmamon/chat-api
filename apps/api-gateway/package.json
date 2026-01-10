@@ -20,6 +20,7 @@
     "@app/config": "workspace:*",
     "@app/database": "workspace:*",
     "@app/logger": "workspace:*",
+    "@app/redis": "workspace:*",
     "@nestjs/common": "11.1.11",
     "@nestjs/core": "11.1.11",
     "@nestjs/jwt": "^11.0.2",
