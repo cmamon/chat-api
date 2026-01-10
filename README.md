@@ -2120,89 +2120,52 @@ Pour accélérer les builds, nous utilisons **Docker BuildKit** et **Docker Bake
 pnpm docker:bake
 ```
 
-### CI/CD Pipeline (GitHub Actions Example)
+### CI/CD Pipeline (GitHub Actions)
+
+Nous utilisons GitHub Actions pour automatiser les tests et les builds Docker. Le workflow tire parti de **Docker Bake** et du cache GitHub Actions pour des performances optimales.
 
 ```yaml
 # .github/workflows/ci.yml
-name: CI/CD Pipeline
+name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
-  build-and-test:
+  lint-and-build:
     runs-on: ubuntu-latest
-    
     steps:
-      - uses: actions/checkout@v4
-      
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.27.0
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
-      
-      - name: Enable Corepack
-        run: corepack enable
-      
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 10
-      
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        run: echo "pnpm_cache_dir=$(pnpm store path)" >> $GITHUB_OUTPUT
-      
-      - name: Setup pnpm cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.pnpm-cache.outputs.pnpm_cache_dir }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-      
+          node-version: 22
+          cache: 'pnpm'
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      
-      - name: Lint
-        run: pnpm run lint
-      
-      - name: Type check
-        run: pnpm run build
-      
-      - name: Run tests
-        run: pnpm run test:cov
-      
-      - name: Upload coverage
-        uses: codecov/codecov-action@v3
-        with:
-          files: ./coverage/lcov.info
 
-  build-docker:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
-    steps:
-      - uses: actions/checkout@v4
-      
+      - name: Lint
+        run: pnpm lint
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      
-      - name: Login to Docker Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ secrets.DOCKER_REGISTRY }}
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      
-      - name: Build and push
+
+      - name: Build images (Docker Bake)
         run: |
-          docker-compose -f docker-compose.prod.yml build
-          docker-compose -f docker-compose.prod.yml push
+          pnpm docker:bake \
+            --set "*.cache-from=type=gha" \
+            --set "*.cache-to=type=gha,mode=max"
 ```
 
 ### Scaling Horizontal
