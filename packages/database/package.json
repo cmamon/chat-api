@@ -1,0 +1,23 @@
+{
+    "name": "@app/database",
+    "version": "1.0.0",
+    "description": "Shared database configuration and migrations",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "dev": "tsc --watch",
+        "clean": "rm -rf dist",
+        "lint": "eslint \"src/**/*.ts\" --fix"
+    },
+    "dependencies": {
+        "@nestjs/common": "^10.3.0",
+        "@nestjs/typeorm": "^10.0.1",
+        "typeorm": "^0.3.19",
+        "pg": "^8.11.3"
+    },
+    "devDependencies": {
+        "@types/node": "^20.10.6",
+        "typescript": "^5.3.3"
+    }
+}

@@ -1,0 +1,70 @@
+{
+  "name": "chat-microservices",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NestJS Microservices Chat Application",
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=10.27.0"
+  },
+  "packageManager": "pnpm@10.27.0",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "install:all": "pnpm install",
+    "build": "turbo run build",
+    "build:packages": "pnpm --filter './packages/*' build",
+    "build:apps": "pnpm --filter './apps/*' build",
+    "dev": "turbo run dev --parallel",
+    "dev:api": "pnpm --filter api-gateway dev",
+    "dev:ws": "pnpm --filter websocket-gateway dev",
+    "dev:chat": "pnpm --filter chat-service dev",
+    "dev:presence": "pnpm --filter presence-service dev",
+    "start:api": "pnpm --filter api-gateway start",
+    "start:ws": "pnpm --filter websocket-gateway start",
+    "start:chat": "pnpm --filter chat-service start",
+    "start:presence": "pnpm --filter presence-service start",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
+    "test:cov": "turbo run test:cov",
+    "test:e2e": "turbo run test:e2e",
+    "lint": "turbo run lint",
+    "lint:fix": "turbo run lint --fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
+    "clean": "turbo run clean && rm -rf node_modules",
+    "clean:docker": "docker-compose down -v && docker system prune -af",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:ps": "docker-compose ps",
+    "db:migrate": "pnpm --filter chat-service migration:run",
+    "db:migrate:revert": "pnpm --filter chat-service migration:revert",
+    "db:seed": "ts-node scripts/seed-db.ts",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "@typescript-eslint/eslint-plugin": "^6.18.0",
+    "@typescript-eslint/parser": "^6.18.0",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.1",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "turbo": "^2.3.3",
+    "typescript": "^5.3.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+packages:
+  # Applications microservices
+  - 'apps/*'
+  
+  # Packages partagés
+  - 'packages/*'

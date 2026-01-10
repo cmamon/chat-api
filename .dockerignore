@@ -1,0 +1,15 @@
+node_modules
+dist
+.git
+.gitignore
+*.md
+.pnpm-debug.log
+.env
+out
+docker-compose*.yml
+config
+# Ignore app-specific node_modules and dist if they exist locally
+apps/*/node_modules
+apps/*/dist
+packages/*/node_modules
+packages/*/dist
