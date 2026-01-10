@@ -15,6 +15,7 @@ RUN pnpm install
 
 COPY --from=builder /app/out/full/ .
 COPY --from=builder /app/tsconfig.base.json .
+RUN pnpm --filter @app/database exec prisma generate
 RUN rm -f tsconfig.tsbuildinfo apps/websocket-gateway/tsconfig.tsbuildinfo
 RUN pnpm run build --filter=websocket-gateway...
 

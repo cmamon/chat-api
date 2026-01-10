@@ -15,6 +15,7 @@ RUN pnpm install
 
 COPY --from=builder /app/out/full/ .
 COPY --from=builder /app/tsconfig.base.json .
+RUN pnpm --filter @app/database exec prisma generate
 RUN rm -f tsconfig.tsbuildinfo apps/api-gateway/tsconfig.tsbuildinfo
 RUN pnpm run build --filter=api-gateway...
 
@@ -23,4 +24,3 @@ WORKDIR /app
 COPY --from=installer /app .
 
 CMD ["node", "apps/api-gateway/dist/main"]
-
