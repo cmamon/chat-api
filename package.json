@@ -42,6 +42,7 @@
     "db:migrate": "pnpm --filter chat-service migration:run",
     "db:migrate:revert": "pnpm --filter chat-service migration:revert",
     "db:seed": "ts-node scripts/seed-db.ts",
+    "lint-staged": "lint-staged",
     "prepare": "husky install"
   },
   "devDependencies": {

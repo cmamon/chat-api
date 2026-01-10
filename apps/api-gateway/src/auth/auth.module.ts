@@ -10,22 +10,22 @@ import { UsersModule } from '../users/users.module';
 import { RedisModule } from '@app/redis';
 
 @Module({
-    imports: [
-        UsersModule,
-        RedisModule,
-        PassportModule.register({ defaultStrategy: 'jwt' }),
-        JwtModule.registerAsync({
-            imports: [ConfigModule],
-            inject: [ConfigService],
-            useFactory: (configService: ConfigService) => ({
-                secret: configService.get<string>('JWT_SECRET') || 'defaultSecret',
-                signOptions: {
-                    expiresIn: configService.get<string>('JWT_EXPIRES_IN', '15m') as any,
-                },
-            }),
-        }),
-    ],
-    providers: [AuthService, LocalStrategy, JwtStrategy, JwtRefreshStrategy],
-    exports: [AuthService],
+  imports: [
+    UsersModule,
+    RedisModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET') || 'defaultSecret',
+        signOptions: {
+          expiresIn: configService.get<string>('JWT_EXPIRES_IN', '15m') as any,
+        },
+      }),
+    }),
+  ],
+  providers: [AuthService, LocalStrategy, JwtStrategy, JwtRefreshStrategy],
+  exports: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}
