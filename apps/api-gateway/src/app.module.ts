@@ -5,10 +5,11 @@ import { APP_GUARD } from '@nestjs/core';
 import { HealthController } from './health.controller';
 import { PrismaModule } from '@app/database';
 import { LoggerModule } from '@app/logger';
-import { RedisModule } from './redis/redis.module';
+import { RedisModule } from '@app/redis';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
     RedisModule,
     UsersModule,
     AuthModule,
+    ChatModule,
   ],
   controllers: [HealthController],
   providers: [

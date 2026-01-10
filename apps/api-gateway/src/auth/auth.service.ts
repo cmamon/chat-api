@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
 import * as argon2 from 'argon2';
 import { randomBytes } from 'crypto';
-import { RedisService } from '../redis/redis.service';
+import { RedisService } from '@app/redis';
 import { Logger } from '@app/logger';
 
 @Injectable()

@@ -25,7 +25,9 @@
       "@app/logger": ["packages/logger/dist"],
       "@app/logger/*": ["packages/logger/dist/*"],
       "@app/config": ["packages/config/dist"],
-      "@app/config/*": ["packages/config/dist/*"]
+      "@app/config/*": ["packages/config/dist/*"],
+      "@app/redis": ["packages/redis/dist"],
+      "@app/redis/*": ["packages/redis/dist/*"]
     }
   },
   "exclude": ["node_modules", "dist", "test"]
