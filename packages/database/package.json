@@ -1,25 +1,25 @@
 {
-    "name": "@app/database",
-    "version": "1.0.0",
-    "description": "Shared database configuration and migrations",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "scripts": {
-        "build": "tsc",
-        "dev": "tsc --watch",
-        "clean": "rm -rf dist",
-        "lint": "eslint \"src/**/*.ts\" --fix"
-    },
-    "dependencies": {
-        "@nestjs/common": "11.1.11",
-        "@prisma/adapter-pg": "^7.2.0",
-        "@prisma/client": "7.2.0",
-        "pg": "^8.13.1"
-    },
-    "devDependencies": {
-        "@types/node": "^22.0.0",
-        "@types/pg": "^8.16.0",
-        "prisma": "7.2.0",
-        "typescript": "^5.7.3"
-    }
+  "name": "@app/database",
+  "version": "1.0.0",
+  "description": "Shared database configuration and migrations",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rm -rf dist",
+    "lint": "eslint \"src/**/*.ts\" --fix"
+  },
+  "dependencies": {
+    "@nestjs/common": "11.1.11",
+    "@prisma/adapter-pg": "^7.2.0",
+    "@prisma/client": "7.2.0",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/pg": "^8.16.0",
+    "prisma": "7.2.0",
+    "typescript": "^5.7.3"
+  }
 }

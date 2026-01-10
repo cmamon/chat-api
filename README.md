@@ -256,15 +256,18 @@ chat-microservices/                    # ROOT du monorepo
 ### Explication de la Structure
 
 #### `/apps` - Applications Microservices
+
 Chaque dossier dans `apps/` est une application NestJS indépendante déployable. Elles partagent les mêmes packages via le workspace pnpm.
 
 #### `/packages` - Bibliothèques Partagées
+
 - **common**: Utilities, constants, decorators, guards partagés
 - **logger**: Service de logging Winston configuré
 - **database**: Configuration TypeORM et migrations
 - **config**: Service de configuration centralisé avec validation
 
 #### Avantages du Monorepo
+
 1. **Code partagé facilement**: Import direct `import { Logger } from '@app/logger'`
 2. **Type-safety**: TypeScript fonctionne entre packages
 3. **Refactoring**: Changements cross-services en un commit
@@ -281,7 +284,7 @@ Chaque dossier dans `apps/` est une application NestJS indépendante déployable
 packages:
   # Applications microservices
   - 'apps/*'
-  
+
   # Packages partagés
   - 'packages/*'
 ```
@@ -324,48 +327,48 @@ engine-strict=true
   "packageManager": "pnpm@10.27.0",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
-    
+
     "install:all": "pnpm install",
-    
+
     "build": "turbo run build",
     "build:packages": "pnpm --filter './packages/*' build",
     "build:apps": "pnpm --filter './apps/*' build",
-    
+
     "dev": "turbo run dev --parallel",
     "dev:api": "pnpm --filter api-gateway dev",
     "dev:ws": "pnpm --filter websocket-gateway dev",
     "dev:chat": "pnpm --filter chat-service dev",
     "dev:presence": "pnpm --filter presence-service dev",
-    
+
     "start:api": "pnpm --filter api-gateway start",
     "start:ws": "pnpm --filter websocket-gateway start",
     "start:chat": "pnpm --filter chat-service start",
     "start:presence": "pnpm --filter presence-service start",
-    
+
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
     "test:cov": "turbo run test:cov",
     "test:e2e": "turbo run test:e2e",
-    
+
     "lint": "turbo run lint",
     "lint:fix": "turbo run lint --fix",
-    
+
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md}\"",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md}\"",
-    
+
     "clean": "turbo run clean && rm -rf node_modules",
     "clean:docker": "docker-compose down -v && docker system prune -af",
-    
+
     "docker:build": "docker-compose build",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
     "docker:ps": "docker-compose ps",
-    
+
     "db:migrate": "pnpm --filter chat-service migration:run",
     "db:migrate:revert": "pnpm --filter chat-service migration:revert",
     "db:seed": "ts-node scripts/seed-db.ts",
-    
+
     "prepare": "husky install"
   },
   "devDependencies": {
@@ -384,13 +387,8 @@ engine-strict=true
     "typescript": "^5.7.3"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md}": [
-      "prettier --write"
-    ]
+    "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
+    "*.{json,md}": ["prettier --write"]
   }
 }
 ```
@@ -677,11 +675,11 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - '5432:5432'
     networks:
       - chat-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-chatuser}"]
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-chatuser}']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -695,11 +693,11 @@ services:
     volumes:
       - redis-data:/data
     ports:
-      - "6379:6379"
+      - '6379:6379'
     networks:
       - chat-network
     healthcheck:
-      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      test: ['CMD', 'redis-cli', '--raw', 'incr', 'ping']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -709,17 +707,17 @@ services:
     image: nats:2.10-alpine
     container_name: chat-nats
     restart: unless-stopped
-    command: "--cluster_name NATS --cluster nats://0.0.0.0:6222 --http_port 8222 --js"
+    command: '--cluster_name NATS --cluster nats://0.0.0.0:6222 --http_port 8222 --js'
     volumes:
       - nats-data:/data
     ports:
-      - "4222:4222"  # Client connections
-      - "6222:6222"  # Cluster routes
-      - "8222:8222"  # HTTP monitoring
+      - '4222:4222' # Client connections
+      - '6222:6222' # Cluster routes
+      - '8222:8222' # HTTP monitoring
     networks:
       - chat-network
     healthcheck:
-      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8222/healthz"]
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:8222/healthz']
       interval: 10s
       timeout: 5s
       retries: 5
@@ -755,14 +753,14 @@ services:
     networks:
       - chat-network
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.api-gateway.rule=Host(`api.localhost`) || PathPrefix(`/api`)"
-      - "traefik.http.routers.api-gateway.entrypoints=web"
-      - "traefik.http.services.api-gateway.loadbalancer.server.port=3000"
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.api-gateway.rule=Host(`api.localhost`) || PathPrefix(`/api`)'
+      - 'traefik.http.routers.api-gateway.entrypoints=web'
+      - 'traefik.http.services.api-gateway.loadbalancer.server.port=3000'
       # Health check
-      - "traefik.http.routers.api-gateway.middlewares=api-gateway-healthcheck"
-      - "traefik.http.middlewares.api-gateway-healthcheck.healthcheck.path=/health"
-      - "traefik.http.middlewares.api-gateway-healthcheck.healthcheck.interval=10s"
+      - 'traefik.http.routers.api-gateway.middlewares=api-gateway-healthcheck'
+      - 'traefik.http.middlewares.api-gateway-healthcheck.healthcheck.path=/health'
+      - 'traefik.http.middlewares.api-gateway-healthcheck.healthcheck.interval=10s'
 
   # WebSocket Gateway
   websocket-gateway:
@@ -788,13 +786,13 @@ services:
     networks:
       - chat-network
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.websocket.rule=Host(`ws.localhost`) || PathPrefix(`/socket.io`)"
-      - "traefik.http.routers.websocket.entrypoints=web"
-      - "traefik.http.services.websocket.loadbalancer.server.port=3001"
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.websocket.rule=Host(`ws.localhost`) || PathPrefix(`/socket.io`)'
+      - 'traefik.http.routers.websocket.entrypoints=web'
+      - 'traefik.http.services.websocket.loadbalancer.server.port=3001'
       # Sticky sessions for WebSocket
-      - "traefik.http.services.websocket.loadbalancer.sticky.cookie=true"
-      - "traefik.http.services.websocket.loadbalancer.sticky.cookie.name=websocket_session"
+      - 'traefik.http.services.websocket.loadbalancer.sticky.cookie=true'
+      - 'traefik.http.services.websocket.loadbalancer.sticky.cookie.name=websocket_session'
 
   # Chat Service
   chat-service:
@@ -851,24 +849,24 @@ services:
     container_name: chat-traefik
     restart: unless-stopped
     command:
-      - "--api.insecure=true"
-      - "--providers.docker=true"
-      - "--providers.docker.exposedbydefault=false"
-      - "--providers.file.directory=/etc/traefik/dynamic"
-      - "--entrypoints.web.address=:80"
-      - "--metrics.prometheus=true"
-      - "--metrics.prometheus.buckets=0.1,0.3,1.2,5.0"
-      - "--accesslog=true"
+      - '--api.insecure=true'
+      - '--providers.docker=true'
+      - '--providers.docker.exposedbydefault=false'
+      - '--providers.file.directory=/etc/traefik/dynamic'
+      - '--entrypoints.web.address=:80'
+      - '--metrics.prometheus=true'
+      - '--metrics.prometheus.buckets=0.1,0.3,1.2,5.0'
+      - '--accesslog=true'
     ports:
-      - "80:80"
-      - "8080:8080"  # Traefik Dashboard
+      - '80:80'
+      - '8080:8080' # Traefik Dashboard
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./config/traefik:/etc/traefik/dynamic:ro
     networks:
       - chat-network
     labels:
-      - "traefik.enable=true"
+      - 'traefik.enable=true'
 ```
 
 ### docker-compose.monitoring.yml
@@ -891,14 +889,14 @@ services:
       - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus-data:/prometheus
     ports:
-      - "9090:9090"
+      - '9090:9090'
     networks:
       - chat-network
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.prometheus.rule=Host(`prometheus.localhost`)"
-      - "traefik.http.routers.prometheus.entrypoints=web"
-      - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.prometheus.rule=Host(`prometheus.localhost`)'
+      - 'traefik.http.routers.prometheus.entrypoints=web'
+      - 'traefik.http.services.prometheus.loadbalancer.server.port=9090'
 
   # Grafana
   grafana:
@@ -914,16 +912,16 @@ services:
       - ./config/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
       - grafana-data:/var/lib/grafana
     ports:
-      - "3002:3000"
+      - '3002:3000'
     networks:
       - chat-network
     depends_on:
       - prometheus
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.grafana.rule=Host(`grafana.localhost`)"
-      - "traefik.http.routers.grafana.entrypoints=web"
-      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.grafana.rule=Host(`grafana.localhost`)'
+      - 'traefik.http.routers.grafana.entrypoints=web'
+      - 'traefik.http.services.grafana.loadbalancer.server.port=3000'
 
 volumes:
   prometheus-data:
@@ -978,13 +976,13 @@ api:
 
 entryPoints:
   web:
-    address: ":80"
+    address: ':80'
 
 providers:
   docker:
     exposedByDefault: false
   file:
-    directory: "/etc/traefik/dynamic"
+    directory: '/etc/traefik/dynamic'
     watch: true
 
 metrics:
@@ -1001,7 +999,7 @@ log:
   level: INFO
 
 accessLog:
-  filePath: "/var/log/traefik/access.log"
+  filePath: '/var/log/traefik/access.log'
   bufferingSize: 100
 ```
 
@@ -1022,7 +1020,7 @@ http:
         contentTypeNosniff: true
         frameDeny: true
         sslRedirect: false
-        customFrameOptionsValue: "SAMEORIGIN"
+        customFrameOptionsValue: 'SAMEORIGIN'
 
     compression:
       compress: {}
@@ -1508,10 +1506,10 @@ async function bootstrap() {
   });
 
   await app.startAllMicroservices();
-  
+
   const port = process.env.PORT || 3000;
   await app.listen(port);
-  
+
   logger.log(`API Gateway is running on port ${port}`, 'Bootstrap');
 }
 
@@ -1564,11 +1562,9 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
       // Token validation logic here...
 
       const userId = client.data.userId;
-      
+
       // Notify presence service
-      await this.presenceClient
-        .emit(MESSAGE_PATTERNS.USER_CONNECTED, { userId, socketId: client.id })
-        .toPromise();
+      await this.presenceClient.emit(MESSAGE_PATTERNS.USER_CONNECTED, { userId, socketId: client.id }).toPromise();
 
       this.logger.log(`Client connected: ${client.id}`, 'ChatGateway');
     } catch (error) {
@@ -1581,19 +1577,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const userId = client.data.userId;
 
     // Notify presence service
-    await this.presenceClient
-      .emit(MESSAGE_PATTERNS.USER_DISCONNECTED, { userId, socketId: client.id })
-      .toPromise();
+    await this.presenceClient.emit(MESSAGE_PATTERNS.USER_DISCONNECTED, { userId, socketId: client.id }).toPromise();
 
     this.logger.log(`Client disconnected: ${client.id}`, 'ChatGateway');
   }
 
   @UseGuards(WsJwtGuard)
   @SubscribeMessage('send_message')
-  async handleMessage(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() payload: { roomId: string; content: string },
-  ) {
+  async handleMessage(@ConnectedSocket() client: Socket, @MessageBody() payload: { roomId: string; content: string }) {
     const userId = client.data.userId;
 
     // Send to chat service for persistence
@@ -1613,16 +1604,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @UseGuards(WsJwtGuard)
   @SubscribeMessage('join_room')
-  async handleJoinRoom(
-    @ConnectedSocket() client: Socket,
-    @MessageBody() payload: { roomId: string },
-  ) {
+  async handleJoinRoom(@ConnectedSocket() client: Socket, @MessageBody() payload: { roomId: string }) {
     await client.join(payload.roomId);
-    
-    this.logger.log(
-      `Client ${client.id} joined room ${payload.roomId}`,
-      'ChatGateway',
-    );
+
+    this.logger.log(`Client ${client.id} joined room ${payload.roomId}`, 'ChatGateway');
 
     return { success: true, roomId: payload.roomId };
   }
@@ -1648,14 +1633,8 @@ export class MessagesController {
   }
 
   @MessagePattern(MESSAGE_PATTERNS.GET_MESSAGES)
-  async getMessages(
-    @Payload() payload: { roomId: string; limit?: number; offset?: number },
-  ) {
-    return this.messagesService.findByRoom(
-      payload.roomId,
-      payload.limit,
-      payload.offset,
-    );
+  async getMessages(@Payload() payload: { roomId: string; limit?: number; offset?: number }) {
+    return this.messagesService.findByRoom(payload.roomId, payload.limit, payload.offset);
   }
 
   @MessagePattern(MESSAGE_PATTERNS.DELETE_MESSAGE)
@@ -1734,13 +1713,13 @@ export const MESSAGE_PATTERNS = {
   GET_MESSAGES: 'chat.message.get',
   DELETE_MESSAGE: 'chat.message.delete',
   UPDATE_MESSAGE: 'chat.message.update',
-  
+
   // Room Service
   CREATE_ROOM: 'chat.room.create',
   GET_ROOM: 'chat.room.get',
   JOIN_ROOM: 'chat.room.join',
   LEAVE_ROOM: 'chat.room.leave',
-  
+
   // Presence Service
   USER_CONNECTED: 'presence.user.connected',
   USER_DISCONNECTED: 'presence.user.disconnected',
@@ -1979,7 +1958,7 @@ export class MetricsService {
   constructor(
     @InjectMetric('messages_sent_total')
     private readonly messageCounter: Counter,
-    
+
     @InjectMetric('message_processing_duration_seconds')
     private readonly messageHistogram: Histogram,
   ) {}
@@ -2112,11 +2091,13 @@ docker buildx bake --push
 Pour accélérer les builds, nous utilisons **Docker BuildKit** et **Docker Bake**. Cela permet de builder tous les microservices en parallèle de manière extrêmement efficace.
 
 **Avantages :**
+
 - **Parallélisation maximale** : Tous les services sont buildés simultanément.
 - **Cache intelligent** : Partage de cache optimal entre les services du monorepo.
 - **Définition déclarative** : Configuration centralisée dans `docker-bake.hcl`.
 
 **Utilisation :**
+
 ```bash
 # Build local de tous les services
 pnpm docker:bake
@@ -2132,9 +2113,9 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   lint-and-build:
@@ -2217,17 +2198,20 @@ pnpm audit --fix
 ### Tutoriels & Articles
 
 #### Monorepo & pnpm
+
 - [Why pnpm?](https://pnpm.io/motivation)
 - [Monorepo best practices](https://monorepo.tools/)
 - [NestJS Monorepo setup](https://docs.nestjs.com/cli/monorepo)
 - [pnpm workspace protocol](https://pnpm.io/workspaces#workspace-protocol-workspace)
 
 #### Microservices NestJS
+
 - [NestJS Microservices patterns](https://docs.nestjs.com/microservices/basics)
 - [NATS with NestJS](https://docs.nestjs.com/microservices/nats)
 - [Building scalable chat applications](https://socket.io/get-started/chat)
 
 #### Performance & Scalability
+
 - [WebSocket scaling strategies](https://socket.io/docs/v4/using-multiple-nodes/)
 - [Redis Pub/Sub patterns](https://redis.io/docs/manual/pubsub/)
 - [Distributed tracing with OpenTelemetry](https://opentelemetry.io/docs/)
@@ -2239,7 +2223,6 @@ pnpm audit --fix
   - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
   - [NestJS Files](https://marketplace.visualstudio.com/items?itemName=AbhijoyBasak.nestjs-files)
   - [Docker](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-docker)
-  
 - **CLI Tools**:
   - [NestJS CLI](https://docs.nestjs.com/cli/overview)
   - [pnpm dlx](https://pnpm.io/cli/dlx) - Run packages without installing
@@ -2314,6 +2297,7 @@ pnpm run test --findRelatedTests
 **Scopes**: api-gateway, websocket, chat-service, presence, common, logger, etc.
 
 **Exemples**:
+
 ```
 feat(api): add user authentication endpoint
 fix(websocket): resolve memory leak in socket connections
@@ -2333,6 +2317,7 @@ test(chat): add unit tests for message service
 **Cause**: Path mappings TypeScript non résolus ou package non buildé
 
 **Solution**:
+
 ```bash
 # 1. Rebuild les packages partagés
 pnpm --filter "@app/*" build
@@ -2351,6 +2336,7 @@ pnpm run build
 **Cause**: node_modules non synchronisés ou corruption du store pnpm
 
 **Solution**:
+
 ```bash
 # Nettoyer le store pnpm
 pnpm store prune
@@ -2366,6 +2352,7 @@ pnpm install --frozen-lockfile
 **Cause**: Dépendances incompatibles entre workspaces
 
 **Solution**:
+
 ```bash
 # Lister toutes les versions d'un package
 pnpm list <package-name>
@@ -2386,6 +2373,7 @@ pnpm install
 #### Build lent ou pas de cache Turbo
 
 **Solution**:
+
 ```bash
 # Vérifier la config Turbo
 cat turbo.json
@@ -2418,6 +2406,7 @@ docker inspect <container-name> | grep -A 10 Health
 **Cause**: Build incomplet ou copie incorrecte des fichiers
 
 **Solution**:
+
 ```dockerfile
 # Vérifier que vous copiez TOUS les packages buildés
 COPY --from=builder /app/packages/*/dist ./packages/
@@ -2463,16 +2452,18 @@ docker-compose logs nats
 #### WebSocket déconnexions fréquentes
 
 **Causes possibles**:
+
 1. Sticky sessions non configurées dans Traefik
 2. Redis Adapter mal configuré
 3. Timeouts trop courts
 
 **Solutions**:
+
 ```yaml
 # docker-compose.yml - Traefik labels
 labels:
-  - "traefik.http.services.websocket.loadbalancer.sticky.cookie=true"
-  - "traefik.http.services.websocket.loadbalancer.sticky.cookie.name=io"
+  - 'traefik.http.services.websocket.loadbalancer.sticky.cookie=true'
+  - 'traefik.http.services.websocket.loadbalancer.sticky.cookie.name=io'
 ```
 
 ```typescript
@@ -2595,7 +2586,7 @@ Pour toute question ou problème:
 
 ### Commandes de diagnostic rapide
 
-```bash
+````bash
 # Santé complète du système
 ./scripts/health-check.sh
 
@@ -2624,9 +2615,9 @@ curl -s http://localhost:8222/varz | jq '.version'
 
 ---
 
-**Version**: 2.0.0 (pnpm Monorepo Edition)  
-**Dernière mise à jour**: 2026-01-09  
-**Architecture**: NestJS Microservices + pnpm Workspaces + Turborepo  
+**Version**: 2.0.0 (pnpm Monorepo Edition)
+**Dernière mise à jour**: 2026-01-09
+**Architecture**: NestJS Microservices + pnpm Workspaces + Turborepo
 **Maintenu par**: Votre équipe
 
 ---
@@ -2639,9 +2630,10 @@ git clone <repo> && cd chat-microservices
 corepack enable && pnpm install
 pnpm run build
 docker-compose up -d
-```
+````
 
 ### Commandes Essentielles
+
 ```bash
 pnpm run dev              # Dev tous services
 pnpm run build            # Build avec Turbo
@@ -2651,6 +2643,7 @@ pnpm --filter api-gateway <cmd>  # Commande spécifique
 ```
 
 ### Ports Importants
+
 - API Gateway: 3000
 - WebSocket: 3001
 - PostgreSQL: 5432
@@ -2661,6 +2654,7 @@ pnpm --filter api-gateway <cmd>  # Commande spécifique
 - Grafana: 3002
 
 ### Structure des Imports
+
 ```typescript
 import { Logger } from '@app/logger';
 import { MESSAGE_PATTERNS } from '@app/common';
