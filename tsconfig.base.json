@@ -20,12 +20,12 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "paths": {
-      "@app/common": ["packages/common/src"],
-      "@app/common/*": ["packages/common/src/*"],
-      "@app/logger": ["packages/logger/src"],
-      "@app/logger/*": ["packages/logger/src/*"],
-      "@app/config": ["packages/config/src"],
-      "@app/config/*": ["packages/config/src/*"]
+      "@app/common": ["packages/common/dist"],
+      "@app/common/*": ["packages/common/dist/*"],
+      "@app/logger": ["packages/logger/dist"],
+      "@app/logger/*": ["packages/logger/dist/*"],
+      "@app/config": ["packages/config/dist"],
+      "@app/config/*": ["packages/config/dist/*"]
     }
   },
   "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]

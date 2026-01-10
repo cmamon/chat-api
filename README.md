@@ -1,5 +1,7 @@
 # Architecture Microservices Chat - NestJS (Monorepo pnpm)
 
+[![CI](https://github.com/cmamon/chat-api/actions/workflows/ci.yml/badge.svg)](https://github.com/cmamon/chat-api/actions/workflows/ci.yml)
+
 ## 📋 Vue d'ensemble
 
 Cette documentation décrit l'architecture complète d'une application de chat professionnel basée sur NestJS avec une approche microservices dans un monorepo géré par pnpm.
