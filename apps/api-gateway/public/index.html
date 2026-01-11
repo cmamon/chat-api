@@ -2,67 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Test Client</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <title>Redirecting...</title>
 </head>
 <body>
-    <div class="container">
-        <!-- Auth Panel -->
-        <div class="panel auth-panel">
-            <h2>🔐 Authentication</h2>
-            <div class="config-group">
-                <label>API URL:</label>
-                <input type="text" id="apiUrl" value="http://localhost:3000">
-                <label>WS URL:</label>
-                <input type="text" id="wsUrl" value="http://localhost:3001">
-            </div>
-            
-            <div id="authForms">
-                <div class="form-group">
-                    <input type="email" id="email" placeholder="Email">
-                    <input type="password" id="password" placeholder="Password">
-                    <input type="text" id="username" placeholder="Username (for Register)">
-                    <div class="button-group">
-                        <button onclick="login()">Login</button>
-                        <button onclick="register()" class="secondary">Register</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="userInfo" style="display: none;">
-                <div class="user-card">
-                    <p><strong>Username:</strong> <span id="displayUsername"></span></p>
-                    <p><strong>Email:</strong> <span id="displayEmail"></span></p>
-                    <button onclick="logout()" class="danger">Logout</button>
-                </div>
-            </div>
-
-            <div class="status-panel">
-                <h3>📡 Status</h3>
-                <p>Connection: <span id="connectionStatus" class="status-offline">Disconnected</span></p>
-            </div>
-        </div>
-
-        <!-- Chat Panel -->
-        <div class="panel chat-panel">
-            <h2>💬 Chat</h2>
-            <div class="room-group">
-                <input type="text" id="roomId" placeholder="Room ID (e.g., general)">
-                <button onclick="joinRoom()">Join Room</button>
-            </div>
-
-            <div id="chatWindow" class="messages-container">
-                <div id="messages"></div>
-            </div>
-
-            <div class="input-group">
-                <input type="text" id="messageInput" placeholder="Type a message..." onkeypress="if(event.key === 'Enter') sendMessage()">
-                <button id="sendBtn" onclick="sendMessage()" disabled>Send</button>
-            </div>
-        </div>
-    </div>
-    <script src="app.js"></script>
+    <script>
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            window.location.href = 'chat.html';
+        } else {
+            window.location.href = 'login.html';
+        }
+    </script>
 </body>
 </html>

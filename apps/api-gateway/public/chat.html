@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="panel chat-panel">
+            <div class="chat-header">
+                <h2>💬 Chat</h2>
+                <div id="userInfo" style="display: none;">
+                    <span id="displayUsername"></span>
+                    <button onclick="logout()" class="danger small">Logout</button>
+                    <!-- config hidden or simplified -->
+                     <input type="hidden" id="apiUrl" value="http://localhost:3000">
+                     <input type="hidden" id="wsUrl" value="http://localhost:3001">
+                </div>
+            </div>
+            
+            <div class="status-panel">
+                <p>Status: <span id="connectionStatus" class="status-offline">Disconnected</span></p>
+            </div>
+
+            <div class="room-group">
+                <input type="text" id="roomId" placeholder="Room ID (e.g., general)">
+                <button onclick="joinRoom()">Join Room</button>
+            </div>
+
+            <div id="chatWindow" class="messages-container">
+                <div id="messages"></div>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="messageInput" placeholder="Type a message..." onkeypress="if(event.key === 'Enter') sendMessage()">
+                <button id="sendBtn" onclick="sendMessage()" disabled>Send</button>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
