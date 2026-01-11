@@ -32,3 +32,15 @@ export interface AuthResponse {
     username: string;
   };
 }
+
+export interface JwtUser {
+  userId: string;
+  email: string;
+  username: string;
+}
+
+export interface JwtRefreshUser {
+  userId: string;
+  email: string;
+  refreshToken: string;
+}

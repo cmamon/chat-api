@@ -19,6 +19,7 @@ import { Public } from './decorators/public.decorator';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { LoginDto, RegisterDto, RefreshTokenDto } from './dto';
 import { UsersService } from '../users/users.service';
+import { JwtUser, JwtRefreshUser } from './interfaces/auth.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -78,7 +79,7 @@ export class AuthController {
   @UseGuards(AuthGuard('jwt-refresh'))
   @HttpCode(HttpStatus.OK)
   @Post('refresh')
-  async refresh(@Body() refreshTokenDto: RefreshTokenDto, @CurrentUser() user: any) {
+  async refresh(@Body() refreshTokenDto: RefreshTokenDto, @CurrentUser() user: JwtRefreshUser) {
     return this.authService.refreshAccessToken(user.refreshToken, user.userId);
   }
 
@@ -116,7 +117,7 @@ export class AuthController {
   }
 
   @Get('me')
-  async getProfile(@CurrentUser() user: any) {
+  async getProfile(@CurrentUser() user: JwtUser) {
     return user;
   }
 }
