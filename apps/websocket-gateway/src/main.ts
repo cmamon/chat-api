@@ -3,7 +3,10 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  // Basic setup for verification
+  app.enableCors({
+    origin: '*',
+    credentials: true,
+  });
   await app.listen(3001);
   console.log(`WebSocket Gateway is running on port 3001`);
 }

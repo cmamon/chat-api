@@ -27,6 +27,7 @@
     "@nestjs/microservices": "11.1.11",
     "@nestjs/passport": "^11.0.5",
     "@nestjs/platform-express": "11.1.11",
+    "@nestjs/serve-static": "^5.0.4",
     "@nestjs/throttler": "^6.5.0",
     "argon2": "^0.44.0",
     "helmet": "^8.1.0",

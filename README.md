@@ -8,7 +8,7 @@ Cette documentation décrit l'architecture complète d'une application de chat p
 
 ### Stack Technologique
 
-- **Framework**: NestJS + TypeScript
+- **Framework**: NestJS
 - **Package Manager**: pnpm (avec workspaces)
 - **Architecture**: Monorepo Turborepo
 - **Communication**: NATS (message broker)

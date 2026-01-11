@@ -73,6 +73,11 @@ export class AuthService {
       refreshToken,
       expiresIn: 900,
       tokenType: 'Bearer',
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+      },
     };
   }
 
@@ -113,6 +118,11 @@ export class AuthService {
       refreshToken: newRefreshToken,
       expiresIn: 900,
       tokenType: 'Bearer',
+      user: {
+        id: user.id,
+        email: user.email,
+        username: user.username,
+      },
     };
   }
 
@@ -179,6 +189,7 @@ export class AuthService {
     const payload: TokenPayload = {
       sub: user.id,
       email: user.email,
+      username: user.username,
       type: 'access',
     };
 

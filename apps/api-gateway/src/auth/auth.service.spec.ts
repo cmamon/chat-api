@@ -169,6 +169,7 @@ describe('AuthService', () => {
 
       expect(result.accessToken).toBe('access_token');
       expect(result.refreshToken).toBeDefined();
+      expect(result.user).toEqual(user);
       expect(usersService.updateLastLogin).toHaveBeenCalledWith('1');
     });
   });

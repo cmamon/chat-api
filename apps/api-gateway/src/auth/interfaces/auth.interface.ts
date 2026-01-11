@@ -1,6 +1,7 @@
 export interface TokenPayload {
   sub: string;
   email: string;
+  username: string;
   type: 'access' | 'refresh';
 }
 
@@ -25,4 +26,9 @@ export interface AuthResponse {
   refreshToken: string;
   expiresIn: number;
   tokenType: string;
+  user?: {
+    id: string;
+    email: string;
+    username: string;
+  };
 }
