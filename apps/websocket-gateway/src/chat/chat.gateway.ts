@@ -54,12 +54,21 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   handleDisconnect(@ConnectedSocket() client: Socket) {
     this.logger.log(`Client disconnected: ${client.data.email || 'unknown'} (${client.id})`);
+
+    if (client.data.roomId && client.data.username) {
+      this.server.to(client.data.roomId).emit('user_left', {
+        userId: client.data.userId,
+        username: client.data.username,
+      });
+      this.logger.log(`User ${client.data.username} left room: ${client.data.roomId}`);
+    }
   }
 
   @SubscribeMessage('join_room')
   async handleJoinRoom(@ConnectedSocket() client: Socket, @MessageBody() payload: { roomId: string }) {
     const { roomId } = payload;
     await client.join(roomId);
+    client.data.roomId = roomId; // Track current room
 
     this.logger.log(`User ${client.data.username} joined room: ${roomId}`);
 
